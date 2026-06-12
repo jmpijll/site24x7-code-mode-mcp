@@ -1,0 +1,23 @@
+name = "site24x7-code-mode-mcp"
+main = "index.ts"
+compatibility_date = "2026-05-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Worker Loader binding for the @cloudflare/codemode DynamicWorkerExecutor
+# sandbox. Requires the worker_loaders compatibility flag rollout — see
+# https://developers.cloudflare.com/workers/runtime-apis/bindings/worker-loader/.
+worker_loaders = [
+  { binding = "LOADER" }
+]
+
+# Defaults — leave unset for multi-tenant. Set them as Worker secrets for
+# single-tenant deployments:
+#   wrangler secret put DEFAULT_CLIENT_SECRET
+#   wrangler secret put DEFAULT_REFRESH_TOKEN
+[vars]
+# DEFAULT_CLIENT_ID = "1000.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+# DEFAULT_CLIENT_SECRET = "set via `wrangler secret put DEFAULT_CLIENT_SECRET`"
+# DEFAULT_REFRESH_TOKEN = "set via `wrangler secret put DEFAULT_REFRESH_TOKEN`"
+# DEFAULT_ZONE = "com"
+# DEFAULT_ZAAID = ""
+# DEFAULT_ACCOUNT_TYPE = "standard"

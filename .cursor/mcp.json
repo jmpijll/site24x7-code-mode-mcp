@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "site24x7": {
+      "command": "node",
+      "args": ["dist/index.js"],
+      "env": {
+        "MCP_TRANSPORT": "stdio",
+        "SITE24X7_CLIENT_ID": "${env:SITE24X7_CLIENT_ID}",
+        "SITE24X7_CLIENT_SECRET": "${env:SITE24X7_CLIENT_SECRET}",
+        "SITE24X7_REFRESH_TOKEN": "${env:SITE24X7_REFRESH_TOKEN}",
+        "SITE24X7_ZONE": "${env:SITE24X7_ZONE}",
+        "SITE24X7_ZAAID": "${env:SITE24X7_ZAAID}",
+        "SITE24X7_ACCOUNT_TYPE": "${env:SITE24X7_ACCOUNT_TYPE}"
+      }
+    }
+  }
+}

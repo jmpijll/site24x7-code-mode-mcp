@@ -1,0 +1,6 @@
+dist/
+node_modules/
+coverage/
+src/spec/site24x7-fallback.json
+src/spec/cache/
+out/
