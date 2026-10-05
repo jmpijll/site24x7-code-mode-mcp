@@ -1,0 +1,20 @@
+name: Bug report
+description: Report reproducible behavior that differs from the documented API surface.
+title: '[bug] '
+body:
+  - type: markdown
+    attributes:
+      value: Do not share client secrets, refresh tokens or tenant data. Report security vulnerabilities privately.
+  - type: input
+    id: environment
+    attributes:
+      label: Server version, client, zone and account type
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Reproduction, expected behavior and actual behavior
+      description: Include the relevant API operation and redacted tool input, where applicable.
+    validations:
+      required: true

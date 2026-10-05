@@ -33,3 +33,6 @@ scripts/docs-snapshot.html
 out/*
 !out/verification/
 !out/verification/**
+
+# Worker dry-run output
+.wrangler-out/

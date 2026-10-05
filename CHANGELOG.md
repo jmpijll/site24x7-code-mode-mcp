@@ -6,6 +6,13 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- Upgrade Wrangler to the tested 4.105 baseline so `worker_loaders` is recognized; add a Worker dry-run CI job.
+- Derive Node MCP version metadata from package.json across the family; use package metadata in Worker scaffolds to prevent release drift.
+- Align README presentation with Vapour and Slightshot, retaining detailed setup and historical verification in the usage guide.
+- Align Node 22.19+ requirements, contributor checks, install policy, LF text handling, CI and Docker build exclusions across the code-mode server family.
+
 ## [0.1.0-beta.1] — 2026-06-12
 
 ### Added

@@ -222,7 +222,7 @@ If the smoke fails, check in this order:
 
 1. Is the server actually registered? Run `cursor-agent --list-mcps` (or the IDE's *MCP* settings panel) and confirm `site24x7` appears.
 2. Are credentials reaching the server? In stdio mode, run `node dist/index.js` directly and watch stderr. In HTTP mode, hit `GET /health`.
-3. Is the refresh token zone-correct? A `com` refresh token will fail with `INVALID_TOKEN` against `accounts.zoho.eu`. See [`multi-tenant.md`](multi-tenant.md) and the zone table in [`../README.md`](../README.md#data-centers).
+3. Is the refresh token zone-correct? A `com` refresh token will fail with `INVALID_TOKEN` against `accounts.zoho.eu`. See [`multi-tenant.md`](multi-tenant.md) and the zone table in [`../README.md`](usage.md#data-centers).
 4. For MSP/BU users hitting `[site24x7.MissingZaaidError]`, confirm the operation is one you meant to call against a customer (not the portal root), and that the model wrapped it in `withCustomer`.
 
 ## 8. Known limitations specific to Cursor

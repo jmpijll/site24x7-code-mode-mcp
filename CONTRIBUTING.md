@@ -34,7 +34,7 @@ and standard), bug reports, edge cases, and PRs.
 ```bash
 git clone https://github.com/jmpijll/site24x7-code-mode-mcp
 cd site24x7-code-mode-mcp
-npm install --legacy-peer-deps
+npm ci
 cp .env.example .env
 # (optional) edit .env to point at a real Site24x7 account for live testing
 npm run dev
@@ -55,7 +55,7 @@ npm run dev
 | `npm run live-test` | Read-only sweep against a real Site24x7 tenant (uses `.env`) |
 | `npm run smoke:inspector` | MCP Inspector CLI smoke (`tools/list` + `search` + `execute`) |
 
-CI runs `lint`, `typecheck`, `test`, and `build` on Node 20 + Node 22, plus
+CI runs `lint`, `typecheck`, `test`, and `build` on Node 22 + Node 24, plus
 an MCP Inspector smoke test that confirms `tools/list` exposes both
 `site24x7_search` and `site24x7_execute`. Keep them green.
 
@@ -102,3 +102,14 @@ untouched lines is fine to leave alone.
 Do not file security issues publicly. Use the [private security advisory
 form](https://github.com/jmpijll/site24x7-code-mode-mcp/security/advisories/new).
 See [SECURITY.md](SECURITY.md).
+
+
+## Shared repository conventions
+
+- Use Node.js 22.19+; the lockfile dependencies require this baseline.
+- Install with `npm ci`; `.npmrc` keeps the resolver policy consistent in local, CI and Docker builds.
+- Run `npm run check` before opening a PR: lint, typecheck, mocked tests and build.
+- Run `npm run format:check` separately and report existing drift. CI reports formatting without blocking unrelated changes.
+- Keep text files in LF format (`.gitattributes`).
+- Keep service-specific API semantics, tool names and sandbox bridges compatible.
+- Record live checks separately from mocked tests; never infer new client or upstream coverage from CI.
