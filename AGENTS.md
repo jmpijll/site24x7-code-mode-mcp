@@ -161,7 +161,7 @@ QuickJS treats the executed code as module-body, not function-body. All `site24x
 
 ## 7. Code style
 
-- TypeScript, strict, ESM. Node 22 and 24.19+.
+- TypeScript, strict, ESM. Node 22.19+ (CI: 22 and 24).
 - **Avoid narrative comments.** Comments explain the *why* of non-obvious decisions only — never restate what the code does.
 - Prefer plain functions over classes when there's no state.
 - Errors in the host that need to reach the sandbox go through `formatHttpError` / the executor's error path — preserve the `[site24x7.<error-class>]` prefix, the model relies on it.
