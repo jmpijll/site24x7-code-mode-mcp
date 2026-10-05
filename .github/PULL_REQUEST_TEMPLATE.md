@@ -1,15 +1,16 @@
 ## What changed
 
-Describe the change and why it is needed.
+Describe the problem and resulting behavior. Link related issues where applicable.
 
 ## Verification
 
-- [ ] `npm run check` succeeds (lint, typecheck, mocked tests, build)
-- [ ] `npm run format:check` run; existing warnings described below
-- [ ] Relevant README / usage / contributor docs updated
-- [ ] Live verification, if performed, names the zone, account type, client and operations
-- [ ] No client secrets, refresh tokens or tenant data committed
+- [ ] `npm run check` succeeds (lint, formatting, typecheck, mocked tests and build)
+- [ ] Built MCP smoke succeeds (included in `npm run check`); no tenant credentials needed
+- [ ] `npm run cf:check` succeeds if the Worker or its dependencies changed
+- [ ] Relevant README, usage, contributor or agent docs updated
+- [ ] Live checks, if performed, name the client, upstream version and operations exercised
+- [ ] No credentials, tenant identifiers or private service data committed
 
 ## Notes for reviewers
 
-State remaining validation and any compatibility risks.
+Describe compatibility changes and remaining validation. Keep mocked, live and LLM-mediated evidence distinct.

@@ -57,7 +57,10 @@ export class SearchExecutor extends BaseSyncExecutor {
       'searchOperations',
       (qHandle: QuickJSHandle, limitHandle?: QuickJSHandle) => {
         const q = context.getString(qHandle);
-        const limit = limitHandle && context.typeof(limitHandle) === 'number' ? context.getNumber(limitHandle) : 25;
+        const limit =
+          limitHandle && context.typeof(limitHandle) === 'number'
+            ? context.getNumber(limitHandle)
+            : 25;
         if (!this.spec) return jsonValueToHandle(context, []);
         const ops = searchOperations(this.spec, q, limit).map(summariseOp);
         return jsonValueToHandle(context, ops);

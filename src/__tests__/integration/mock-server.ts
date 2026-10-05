@@ -35,7 +35,12 @@ export async function startMockUpstream(): Promise<MockServerHandle> {
   const addr = server.address();
   if (addr === null || typeof addr === 'string') throw new Error('mock server address');
   handle.url = `http://127.0.0.1:${String(addr.port)}`;
-  handle.close = () => new Promise<void>((r) => server.close(() => { r(); }));
+  handle.close = () =>
+    new Promise<void>((r) =>
+      server.close(() => {
+        r();
+      }),
+    );
   return handle;
 }
 
@@ -59,7 +64,7 @@ function handleMock(req: IncomingMessage, res: ServerResponse, handle: MockServe
         message: 'success',
         data: [
           { name: 'Acme Corp', zaaid: '111' },
-          { name: 'Globex',    zaaid: '222' },
+          { name: 'Globex', zaaid: '222' },
         ],
       }),
     );

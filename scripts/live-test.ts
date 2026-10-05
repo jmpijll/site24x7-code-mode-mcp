@@ -33,9 +33,12 @@ import { createSite24x7HttpClient } from '../src/client/http.js';
 import { loadBundledSpec } from '../src/spec/loader.js';
 import { ExecuteExecutor } from '../src/sandbox/execute-executor.js';
 
-const OP_CLIENT_ID_REF = process.env['OP_S24_CLIENT_ID_REF'] ?? 'op://AI Agents/Site24x7 Self Client/client_id';
-const OP_CLIENT_SECRET_REF = process.env['OP_S24_CLIENT_SECRET_REF'] ?? 'op://AI Agents/Site24x7 Self Client/client_secret';
-const OP_REFRESH_TOKEN_REF = process.env['OP_S24_REFRESH_TOKEN_REF'] ?? 'op://AI Agents/Site24x7 Self Client/refresh_token';
+const OP_CLIENT_ID_REF =
+  process.env['OP_S24_CLIENT_ID_REF'] ?? 'op://AI Agents/Site24x7 Self Client/client_id';
+const OP_CLIENT_SECRET_REF =
+  process.env['OP_S24_CLIENT_SECRET_REF'] ?? 'op://AI Agents/Site24x7 Self Client/client_secret';
+const OP_REFRESH_TOKEN_REF =
+  process.env['OP_S24_REFRESH_TOKEN_REF'] ?? 'op://AI Agents/Site24x7 Self Client/refresh_token';
 
 function safeOpRead(ref: string): string | undefined {
   try {
@@ -78,11 +81,15 @@ async function main(): Promise<void> {
   const tenant = buildContextFromEnv(env);
 
   console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.error(`[live] zone=${cfg.zone} accountType=${tenant.accountType} zaaid=${tenant.zaaid ?? '(none)'}`);
+  console.error(
+    `[live] zone=${cfg.zone} accountType=${tenant.accountType} zaaid=${tenant.zaaid ?? '(none)'}`,
+  );
 
   const oauth = createZohoOAuthClient({
     onRefresh: (info) => {
-      console.error(`[live] refreshed token (expires_in=${String(info.expiresIn)}s, zone=${info.zone})`);
+      console.error(
+        `[live] refreshed token (expires_in=${String(info.expiresIn)}s, zone=${info.zone})`,
+      );
     },
   });
   const client = createSite24x7HttpClient({ oauth });

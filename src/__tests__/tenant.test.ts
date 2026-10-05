@@ -55,13 +55,16 @@ describe('tenant context', () => {
   });
 
   it('falls back to provided fallback when headers are absent', () => {
-    const ctx = buildContextFromHeaders({}, {
-      clientId: 'a',
-      clientSecret: 'b',
-      refreshToken: 'c',
-      zone: 'com',
-      accountType: 'standard',
-    });
+    const ctx = buildContextFromHeaders(
+      {},
+      {
+        clientId: 'a',
+        clientSecret: 'b',
+        refreshToken: 'c',
+        zone: 'com',
+        accountType: 'standard',
+      },
+    );
     expect(ctx.zone).toBe('com');
     expect(ctx.zaaid).toBeUndefined();
   });

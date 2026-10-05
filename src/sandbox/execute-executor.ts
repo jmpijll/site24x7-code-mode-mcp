@@ -25,11 +25,7 @@ import {
   dispatchRawRequest,
   UnknownOperationError,
 } from './dispatch.js';
-import {
-  configureRuntimeLimits,
-  formatError,
-  setupConsole,
-} from './executor.js';
+import { configureRuntimeLimits, formatError, setupConsole } from './executor.js';
 import { DEFAULT_LIMITS, type SandboxLimits } from './limits.js';
 import type { ExecuteResult, LogEntry } from './types.js';
 import { MissingCredentialsError, MissingZaaidError, type TenantContext } from '../types/tenant.js';
@@ -84,7 +80,9 @@ export class ExecuteExecutor {
       if (preludeResult.error) {
         const errValue: unknown = context.dump(preludeResult.error);
         preludeResult.error.dispose();
-        throw new Error(`[site24x7.error] failed to bootstrap site24x7 namespace: ${formatError(errValue)}`);
+        throw new Error(
+          `[site24x7.error] failed to bootstrap site24x7 namespace: ${formatError(errValue)}`,
+        );
       }
       preludeResult.value.dispose();
 
@@ -282,4 +280,3 @@ function parseJson(json: string): Record<string, unknown> {
     return {};
   }
 }
-

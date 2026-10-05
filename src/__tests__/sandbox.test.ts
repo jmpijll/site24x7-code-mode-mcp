@@ -89,7 +89,11 @@ describe('execute executor', () => {
       seen.push(zaaid);
       return null;
     });
-    const ex = new ExecuteExecutor({ tenant: { ...tenant, zaaid: 'baseline' }, spec: SPEC, client });
+    const ex = new ExecuteExecutor({
+      tenant: { ...tenant, zaaid: 'baseline' },
+      spec: SPEC,
+      client,
+    });
     const res = await ex.execute(`
       site24x7.current_status.get_current_status();
       site24x7.withCustomer('temp', function(s) {

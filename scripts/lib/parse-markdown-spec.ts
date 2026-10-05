@@ -100,10 +100,12 @@ function normalisePath(rawPath: string): string {
 }
 
 function tagFromGroup(group: string): string {
-  return group
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '_')
-    .replace(/^_+|_+$/g, '') || 'general';
+  return (
+    group
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '_')
+      .replace(/^_+|_+$/g, '') || 'general'
+  );
 }
 
 function sanitiseId(method: HttpMethod, path: string): string {
@@ -200,7 +202,10 @@ function extractParams(bodyLines: string[]): ParamSpec[] {
       inTable = false;
       continue;
     }
-    const cells = line.split('|').slice(1, -1).map((c) => c.trim());
+    const cells = line
+      .split('|')
+      .slice(1, -1)
+      .map((c) => c.trim());
     if (cells.length < 2) continue;
     // First row is the header; second is the separator. Detect & skip them.
     if (cells.some((c) => /^[-:]+$/.test(c))) {
@@ -289,7 +294,9 @@ export function parseMarkdownSpec(markdown: string): RawOperation[] {
   const deduped = [...seen.values()].sort((a, b) => a.operationId.localeCompare(b.operationId));
 
   if (skipped.length > 0) {
-    console.warn(`[update-spec] skipped ${String(skipped.length)} non-operation sections (no method+path line)`);
+    console.warn(
+      `[update-spec] skipped ${String(skipped.length)} non-operation sections (no method+path line)`,
+    );
   }
   return deduped;
 }
