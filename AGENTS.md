@@ -56,7 +56,7 @@ The whole product is just **two MCP tools** — `site24x7_search` and `site24x7_
 ## 3. Daily dev loop
 
 ```bash
-npm install --legacy-peer-deps    # one-time
+npm ci                            # one-time
 npm run typecheck                 # tsc --noEmit
 npm test                          # vitest run
 npm run lint                      # eslint
@@ -64,7 +64,8 @@ npm run format:check              # prettier
 npm run build                     # tsc → dist/ (also copies the bundled spec)
 ```
 
-Before opening any PR, all five must be green.
+Before opening any PR, lint, typecheck, tests and build must be green. Run
+format:check separately and report existing drift; CI keeps formatting advisory.
 
 For end-to-end smoke against a live Site24x7 tenant (read-only):
 
@@ -160,7 +161,7 @@ QuickJS treats the executed code as module-body, not function-body. All `site24x
 
 ## 7. Code style
 
-- TypeScript, strict, ESM. Node 20+.
+- TypeScript, strict, ESM. Node 22 and 24.19+.
 - **Avoid narrative comments.** Comments explain the *why* of non-obvious decisions only — never restate what the code does.
 - Prefer plain functions over classes when there's no state.
 - Errors in the host that need to reach the sandbox go through `formatHttpError` / the executor's error path — preserve the `[site24x7.<error-class>]` prefix, the model relies on it.

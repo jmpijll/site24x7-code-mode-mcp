@@ -30,7 +30,8 @@
     "live-test": "tsx scripts/live-test.ts",
     "smoke:inspector": "bash scripts/smoke-inspector.sh",
     "cf:dev": "wrangler dev --config cf-worker/wrangler.toml",
-    "cf:deploy": "wrangler deploy --config cf-worker/wrangler.toml"
+    "cf:deploy": "wrangler deploy --config cf-worker/wrangler.toml",
+    "check": "npm run lint && npm run typecheck && npm test && npm run build"
   },
   "keywords": [
     "site24x7",
@@ -53,7 +54,7 @@
     "url": "https://github.com/jmpijll/site24x7-code-mode-mcp/issues"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.19.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260507.1",
@@ -67,7 +68,7 @@
     "tsx": "^4.19.0",
     "typescript": "^5.6.0",
     "vitest": "^4.1.6",
-    "wrangler": "^3.90.0"
+    "wrangler": "4.105.0"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
