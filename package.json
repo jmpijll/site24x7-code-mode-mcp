@@ -58,7 +58,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260507.1",
-    "@types/node": "^22.0.0",
+    "@types/node": "^26.6.4",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
     "cheerio": "^1.2.0",
