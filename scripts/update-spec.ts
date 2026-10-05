@@ -89,7 +89,9 @@ async function fetchLiveHtml(): Promise<string> {
 export function htmlToMarkdown(html: string): string {
   const $ = loadHtml(html);
   // Drop the TOC sidebar and any chrome that just clutters the output.
-  $('nav, aside, header, footer, script, style, .tocify-wrapper, #toc, .top-band, .page-wrapper > .dark-box').remove();
+  $(
+    'nav, aside, header, footer, script, style, .tocify-wrapper, #toc, .top-band, .page-wrapper > .dark-box',
+  ).remove();
   const content = $('div.content').first();
   const root = content.length > 0 ? content : $('body').length > 0 ? $('body') : $.root();
   const lines: string[] = [];
@@ -133,7 +135,9 @@ export function htmlToMarkdown(html: string): string {
         lines.push('`' + node.text().trim() + '`');
         break;
       case 'blockquote':
-        node.children().each((_, child) => { walk($(child)); });
+        node.children().each((_, child) => {
+          walk($(child));
+        });
         break;
       case 'table':
         node.find('tr').each((_, tr) => {
@@ -151,16 +155,22 @@ export function htmlToMarkdown(html: string): string {
         lines.push('- ' + node.text().trim().replace(/\s+/g, ' '));
         break;
       default:
-        node.children().each((_, child) => { walk($(child)); });
+        node.children().each((_, child) => {
+          walk($(child));
+        });
         break;
     }
   }
 
-  root.children().each((_, child) => { walk($(child)); });
+  root.children().each((_, child) => {
+    walk($(child));
+  });
   return lines.join('\n');
 }
 
-const isMain = import.meta.url === `file://${process.argv[1] ?? ''}` || process.argv[1]?.endsWith('update-spec.ts') === true;
+const isMain =
+  import.meta.url === `file://${process.argv[1] ?? ''}` ||
+  process.argv[1]?.endsWith('update-spec.ts') === true;
 if (isMain) {
   main().catch((err: unknown) => {
     console.error('[update-spec] failed:', err);

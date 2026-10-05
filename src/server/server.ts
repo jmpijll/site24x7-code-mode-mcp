@@ -1,3 +1,4 @@
+import { SERVER_VERSION } from '../version.js';
 /**
  * MCP Server — Site24x7 Code Mode.
  *
@@ -133,7 +134,7 @@ export function createMcpServer(options: CreateServerOptions): McpServer {
     limits,
     logger,
     name = 'site24x7-code-mode-mcp',
-    version = '0.1.0',
+    version = SERVER_VERSION,
   } = options;
 
   const server = new McpServer(
@@ -163,17 +164,23 @@ export function createMcpServer(options: CreateServerOptions): McpServer {
       inputSchema: {
         code: z
           .string()
-          .describe('JavaScript code to execute against the bundled spec. The final expression is returned.'),
+          .describe(
+            'JavaScript code to execute against the bundled spec. The final expression is returned.',
+          ),
       },
     },
     async ({ code }) => {
       logger?.info(`[site24x7_search] ${String(code.length)} chars`);
       if (code.length > MAX_CODE_SIZE) {
-        return errorResult(`Code too large (${String(code.length)} chars, max ${String(MAX_CODE_SIZE)}).`);
+        return errorResult(
+          `Code too large (${String(code.length)} chars, max ${String(MAX_CODE_SIZE)}).`,
+        );
       }
       try {
         const result = await searchExecutor.execute(code);
-        logger?.info(`[site24x7_search] ${result.ok ? 'ok' : 'error'} ${String(result.durationMs)}ms`);
+        logger?.info(
+          `[site24x7_search] ${result.ok ? 'ok' : 'error'} ${String(result.durationMs)}ms`,
+        );
         return formatToolResult(result);
       } catch (err) {
         return errorResult(err instanceof Error ? err.message : String(err));
@@ -189,20 +196,26 @@ export function createMcpServer(options: CreateServerOptions): McpServer {
       inputSchema: {
         code: z
           .string()
-          .describe('JavaScript code to execute against the live Site24x7 API. Wrap async work in an IIFE.'),
+          .describe(
+            'JavaScript code to execute against the live Site24x7 API. Wrap async work in an IIFE.',
+          ),
       },
     },
     async ({ code }) => {
       logger?.info(`[site24x7_execute] ${String(code.length)} chars`);
       if (code.length > MAX_CODE_SIZE) {
-        return errorResult(`Code too large (${String(code.length)} chars, max ${String(MAX_CODE_SIZE)}).`);
+        return errorResult(
+          `Code too large (${String(code.length)} chars, max ${String(MAX_CODE_SIZE)}).`,
+        );
       }
 
       let tenant: TenantContext;
       try {
         tenant = await tenantResolver();
       } catch (err) {
-        return errorResult(`Failed to resolve tenant credentials: ${err instanceof Error ? err.message : String(err)}`);
+        return errorResult(
+          `Failed to resolve tenant credentials: ${err instanceof Error ? err.message : String(err)}`,
+        );
       }
 
       const executor = new ExecuteExecutor({

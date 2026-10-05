@@ -102,10 +102,13 @@ export function createZohoOAuthClient(opts: ZohoOAuthClientOptions = {}): ZohoOA
     try {
       parsed = JSON.parse(bodyText) as typeof parsed;
     } catch {
-      throw new ZohoOAuthError(`refresh token exchange returned non-JSON body: ${bodyText.slice(0, 256)}`, {
-        status: res.status,
-        body: bodyText,
-      });
+      throw new ZohoOAuthError(
+        `refresh token exchange returned non-JSON body: ${bodyText.slice(0, 256)}`,
+        {
+          status: res.status,
+          body: bodyText,
+        },
+      );
     }
     if (typeof parsed.error === 'string') {
       throw new ZohoOAuthError(`refresh token exchange returned error: ${parsed.error}`, {
@@ -119,7 +122,8 @@ export function createZohoOAuthClient(opts: ZohoOAuthClientOptions = {}): ZohoOA
         { status: res.status, body: bodyText },
       );
     }
-    const expiresIn = typeof parsed.expires_in === 'number' && parsed.expires_in > 0 ? parsed.expires_in : 3600;
+    const expiresIn =
+      typeof parsed.expires_in === 'number' && parsed.expires_in > 0 ? parsed.expires_in : 3600;
     const cached: CachedAccessToken = {
       accessToken: parsed.access_token,
       expiresAt: Date.now() + expiresIn * 1000 - TOKEN_BUFFER_MS,

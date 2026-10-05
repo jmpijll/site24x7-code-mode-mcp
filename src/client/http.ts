@@ -22,7 +22,10 @@ export class Site24x7HttpError extends Error {
   public readonly body: unknown;
   public readonly requiredScopes?: string[];
   public override readonly name = 'Site24x7HttpError';
-  constructor(message: string, opts: { status: number; body?: unknown; requiredScopes?: string[] }) {
+  constructor(
+    message: string,
+    opts: { status: number; body?: unknown; requiredScopes?: string[] },
+  ) {
     super(`[site24x7.HttpError] ${message}`);
     this.status = opts.status;
     if (opts.body !== undefined) this.body = opts.body;
@@ -31,7 +34,10 @@ export class Site24x7HttpError extends Error {
 }
 
 export interface Site24x7HttpClient {
-  request<T = unknown>(ctx: TenantContext, params: Site24x7RequestParams): Promise<Site24x7Response<T>>;
+  request<T = unknown>(
+    ctx: TenantContext,
+    params: Site24x7RequestParams,
+  ): Promise<Site24x7Response<T>>;
 }
 
 export interface Site24x7HttpClientOptions {
@@ -47,7 +53,9 @@ export function createSite24x7HttpClient(opts: Site24x7HttpClientOptions): Site2
   const rateLimitRetries = opts.rateLimitRetries ?? 1;
 
   function apiHost(zone: TenantContext['zone']): string {
-    return opts.apiBaseUrlOverride ? opts.apiBaseUrlOverride(zone) : resolveZoneEndpoints(zone).apiBaseUrl;
+    return opts.apiBaseUrlOverride
+      ? opts.apiBaseUrlOverride(zone)
+      : resolveZoneEndpoints(zone).apiBaseUrl;
   }
 
   function buildUrl(ctx: TenantContext, params: Site24x7RequestParams): string {
@@ -62,7 +70,8 @@ export function createSite24x7HttpClient(opts: Site24x7HttpClientOptions): Site2
       for (const [k, v] of Object.entries(params.query)) {
         if (v === undefined) continue;
         if (Array.isArray(v)) {
-          for (const item of v) url.searchParams.append(k, typeof item === 'string' ? item : String(item));
+          for (const item of v)
+            url.searchParams.append(k, typeof item === 'string' ? item : String(item));
         } else {
           url.searchParams.set(k, String(v));
         }
@@ -176,10 +185,10 @@ export function createSite24x7HttpClient(opts: Site24x7HttpClientOptions): Site2
         accessToken = await opts.oauth.getAccessToken(ctx);
         const retry = await attempt(ctx, params, accessToken);
         if (retry.kind === 'rate-limited') {
-          throw new Site24x7HttpError(
-            `HTTP 429 on 401-retry (rate limited)`,
-            { status: 429, body: retry.raw },
-          );
+          throw new Site24x7HttpError(`HTTP 429 on 401-retry (rate limited)`, {
+            status: 429,
+            body: retry.raw,
+          });
         }
         resp = retry.value;
       }
@@ -214,7 +223,9 @@ type Response429Or<T> =
       headers: Record<string, string>;
     };
 
-function headersToRecord(h: { forEach(cb: (value: string, key: string) => void): void }): Record<string, string> {
+function headersToRecord(h: {
+  forEach(cb: (value: string, key: string) => void): void;
+}): Record<string, string> {
   const out: Record<string, string> = {};
   h.forEach((value, key) => {
     out[key.toLowerCase()] = value;
@@ -248,7 +259,7 @@ function sleep(ms: number): Promise<void> {
 
 function extractData(parsed: unknown): unknown {
   if (parsed && typeof parsed === 'object' && !Array.isArray(parsed) && 'data' in parsed) {
-    return (parsed).data;
+    return parsed.data;
   }
   return parsed;
 }

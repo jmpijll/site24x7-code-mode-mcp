@@ -13,11 +13,7 @@ function tenant(over: Partial<TenantContext> = {}): TenantContext {
   };
 }
 
-function makeFetch(response: {
-  status?: number;
-  body?: unknown;
-  text?: string;
-}): typeof fetch {
+function makeFetch(response: { status?: number; body?: unknown; text?: string }): typeof fetch {
   return vi.fn(async () => {
     const status = response.status ?? 200;
     return {
@@ -38,7 +34,8 @@ describe('Zoho OAuth refresh-token client', () => {
       ok: true,
       status: 200,
       statusText: 'OK',
-      text: async (): Promise<string> => JSON.stringify({ access_token: 'tok-1', expires_in: 3600 }),
+      text: async (): Promise<string> =>
+        JSON.stringify({ access_token: 'tok-1', expires_in: 3600 }),
     }));
     const oauth = createZohoOAuthClient({ fetch: fetchSpy as unknown as typeof fetch });
     const t = tenant();
@@ -52,7 +49,7 @@ describe('Zoho OAuth refresh-token client', () => {
   it('refreshes again after invalidation', async () => {
     let n = 0;
     const oauth = createZohoOAuthClient({
-      fetch: ((async () => {
+      fetch: (async () => {
         n += 1;
         return {
           ok: true,
@@ -61,7 +58,7 @@ describe('Zoho OAuth refresh-token client', () => {
           text: async (): Promise<string> =>
             JSON.stringify({ access_token: `tok-${String(n)}`, expires_in: 3600 }),
         };
-      }) as unknown) as typeof fetch,
+      }) as unknown as typeof fetch,
     });
     const t = tenant();
     expect(await oauth.getAccessToken(t)).toBe('tok-1');
@@ -71,7 +68,7 @@ describe('Zoho OAuth refresh-token client', () => {
 
   it('routes to the right accounts host per zone', async () => {
     const seen: string[] = [];
-    const fetchSpy = ((async (url: string) => {
+    const fetchSpy = (async (url: string) => {
       seen.push(url);
       return {
         ok: true,
@@ -79,7 +76,7 @@ describe('Zoho OAuth refresh-token client', () => {
         statusText: 'OK',
         text: async (): Promise<string> => JSON.stringify({ access_token: 'tok', expires_in: 60 }),
       };
-    }) as unknown) as typeof fetch;
+    }) as unknown as typeof fetch;
     const oauth = createZohoOAuthClient({ fetch: fetchSpy });
     await oauth.getAccessToken(tenant({ zone: 'eu', refreshToken: 'rt-eu' }));
     await oauth.getAccessToken(tenant({ zone: 'in', refreshToken: 'rt-in' }));
@@ -95,7 +92,9 @@ describe('Zoho OAuth refresh-token client', () => {
   });
 
   it('surfaces a structured error when the body has no access_token', async () => {
-    const oauth = createZohoOAuthClient({ fetch: makeFetch({ status: 200, body: { error: 'invalid_client' } }) });
+    const oauth = createZohoOAuthClient({
+      fetch: makeFetch({ status: 200, body: { error: 'invalid_client' } }),
+    });
     await expect(oauth.getAccessToken(tenant())).rejects.toBeInstanceOf(ZohoOAuthError);
   });
 });

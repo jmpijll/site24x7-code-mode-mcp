@@ -81,14 +81,15 @@ export async function dispatchListCustomers(
   ctx: TenantContext,
 ): Promise<unknown> {
   const path =
-    ctx.accountType === 'bu'
-      ? '/api/short/bu/business_units'
-      : '/api/short/msp/customers';
+    ctx.accountType === 'bu' ? '/api/short/bu/business_units' : '/api/short/msp/customers';
   const res = await client.request(ctx, { method: 'GET', path });
   return res.data;
 }
 
-function routeArgsToRequest(op: IndexedOperation, args: DispatchOperationArgs): Site24x7RequestParams {
+function routeArgsToRequest(
+  op: IndexedOperation,
+  args: DispatchOperationArgs,
+): Site24x7RequestParams {
   const pathParams: Record<string, string | number> = { ...(args.pathParams ?? {}) };
   const query: Record<string, string | number | boolean | string[] | undefined> = {
     ...(args.query ?? {}),
@@ -163,10 +164,15 @@ function routeArgsToRequest(op: IndexedOperation, args: DispatchOperationArgs): 
  * as part of the argsJson. The host trusts the sandbox-provided zaaid
  * because the host itself owns the tenant context — see http.ts.
  */
-export function buildSite24x7Prelude(spec: ProcessedSpec, initialZaaid: string | undefined): string {
+export function buildSite24x7Prelude(
+  spec: ProcessedSpec,
+  initialZaaid: string | undefined,
+): string {
   const lines: string[] = [];
   lines.push('var site24x7 = (function() {');
-  lines.push('  var __activeZaaid = ' + (initialZaaid ? JSON.stringify(initialZaaid) : 'undefined') + ';');
+  lines.push(
+    '  var __activeZaaid = ' + (initialZaaid ? JSON.stringify(initialZaaid) : 'undefined') + ';',
+  );
   lines.push('  function __parseHostJson(s) {');
   lines.push('    if (typeof s !== "string") return s;');
   lines.push('    if (s.length === 0) return null;');
@@ -186,7 +192,9 @@ export function buildSite24x7Prelude(spec: ProcessedSpec, initialZaaid: string |
   lines.push('    return args;');
   lines.push('  }');
   lines.push('  function __wrapCall(opId) { return function(args) {');
-  lines.push('    return __parseHostJson(__site24x7Call(opId, JSON.stringify(__mergeZaaid(args))));');
+  lines.push(
+    '    return __parseHostJson(__site24x7Call(opId, JSON.stringify(__mergeZaaid(args))));',
+  );
   lines.push('  }; }');
   lines.push('  function __raw(args) {');
   lines.push('    return __parseHostJson(__site24x7Raw(JSON.stringify(__mergeZaaid(args))));');
@@ -201,14 +209,22 @@ export function buildSite24x7Prelude(spec: ProcessedSpec, initialZaaid: string |
     })},`,
   );
   lines.push('    request: __raw,');
-  lines.push('    callOperation: function(opId, args) { return __parseHostJson(__site24x7Call(opId, JSON.stringify(__mergeZaaid(args)))); },');
-  lines.push('    listCustomers: function() { return __parseHostJson(__site24x7ListCustomers()); },');
+  lines.push(
+    '    callOperation: function(opId, args) { return __parseHostJson(__site24x7Call(opId, JSON.stringify(__mergeZaaid(args)))); },',
+  );
+  lines.push(
+    '    listCustomers: function() { return __parseHostJson(__site24x7ListCustomers()); },',
+  );
   lines.push('    withCustomer: function(zaaid, fn) {');
   lines.push('      if (typeof zaaid !== "string" || zaaid.length === 0) {');
-  lines.push('        throw new Error("[site24x7.error] withCustomer: zaaid must be a non-empty string");');
+  lines.push(
+    '        throw new Error("[site24x7.error] withCustomer: zaaid must be a non-empty string");',
+  );
   lines.push('      }');
   lines.push('      if (typeof fn !== "function") {');
-  lines.push('        throw new Error("[site24x7.error] withCustomer: second argument must be a function");');
+  lines.push(
+    '        throw new Error("[site24x7.error] withCustomer: second argument must be a function");',
+  );
   lines.push('      }');
   lines.push('      var prev = __activeZaaid;');
   lines.push('      __activeZaaid = zaaid;');
@@ -219,7 +235,9 @@ export function buildSite24x7Prelude(spec: ProcessedSpec, initialZaaid: string |
   lines.push('      } catch (e) { __activeZaaid = prev; throw e; }');
   lines.push('    }');
   lines.push('  };');
-  lines.push('  Object.defineProperty(ns, "zaaid", { get: function() { return __activeZaaid; } });');
+  lines.push(
+    '  Object.defineProperty(ns, "zaaid", { get: function() { return __activeZaaid; } });',
+  );
 
   const reserved = new Set([
     'spec',
@@ -255,11 +273,45 @@ export function buildSite24x7Prelude(spec: ProcessedSpec, initialZaaid: string |
 }
 
 const RESERVED_WORDS = new Set([
-  'break', 'case', 'catch', 'class', 'const', 'continue', 'debugger', 'default',
-  'delete', 'do', 'else', 'enum', 'export', 'extends', 'false', 'finally',
-  'for', 'function', 'if', 'import', 'in', 'instanceof', 'new', 'null',
-  'return', 'super', 'switch', 'this', 'throw', 'true', 'try', 'typeof',
-  'var', 'void', 'while', 'with', 'yield', 'let', 'static',
+  'break',
+  'case',
+  'catch',
+  'class',
+  'const',
+  'continue',
+  'debugger',
+  'default',
+  'delete',
+  'do',
+  'else',
+  'enum',
+  'export',
+  'extends',
+  'false',
+  'finally',
+  'for',
+  'function',
+  'if',
+  'import',
+  'in',
+  'instanceof',
+  'new',
+  'null',
+  'return',
+  'super',
+  'switch',
+  'this',
+  'throw',
+  'true',
+  'try',
+  'typeof',
+  'var',
+  'void',
+  'while',
+  'with',
+  'yield',
+  'let',
+  'static',
 ]);
 
 export function sanitizeIdentifier(input: string): string {

@@ -23,24 +23,27 @@ function fakeOauth(token = 'tok'): ZohoOAuthClient {
 }
 
 function fakeFetchOk(headers: Record<string, string> = {}): typeof fetch {
-  return ((async () => ({
+  return (async () => ({
     ok: true,
     status: 200,
     statusText: 'OK',
-    text: async (): Promise<string> => JSON.stringify({ code: 0, message: 'ok', data: { ok: true } }),
+    text: async (): Promise<string> =>
+      JSON.stringify({ code: 0, message: 'ok', data: { ok: true } }),
     headers: {
       forEach(cb: (v: string, k: string) => void): void {
         for (const [k, v] of Object.entries(headers)) cb(v, k);
       },
-      get(): null { return null; },
+      get(): null {
+        return null;
+      },
     },
-  })) as unknown) as typeof fetch;
+  })) as unknown as typeof fetch;
 }
 
 describe('HTTP client', () => {
   it('uses Zoho-oauthtoken auth and version=2.0 Accept by default', async () => {
     const captured: { url: string; init: RequestInit } = { url: '', init: {} };
-    const spyFetch = ((async (url: string, init: RequestInit) => {
+    const spyFetch = (async (url: string, init: RequestInit) => {
       captured.url = url;
       captured.init = init;
       return {
@@ -48,9 +51,14 @@ describe('HTTP client', () => {
         status: 200,
         statusText: 'OK',
         text: async (): Promise<string> => JSON.stringify({ data: 'x' }),
-        headers: { forEach() {}, get(): null { return null; } },
+        headers: {
+          forEach() {},
+          get(): null {
+            return null;
+          },
+        },
       };
-    }) as unknown) as typeof fetch;
+    }) as unknown as typeof fetch;
     const client = createSite24x7HttpClient({ oauth: fakeOauth('TOK'), fetch: spyFetch });
     await client.request(tenant(), { method: 'GET', path: '/api/current_status' });
     const headers = (captured.init.headers ?? {}) as Record<string, string>;
@@ -62,36 +70,53 @@ describe('HTTP client', () => {
 
   it('injects Cookie: zaaid when ambient zaaid is set', async () => {
     const captured: { init: RequestInit } = { init: {} };
-    const spyFetch = ((async (_url: string, init: RequestInit) => {
+    const spyFetch = (async (_url: string, init: RequestInit) => {
       captured.init = init;
       return {
         ok: true,
         status: 200,
         statusText: 'OK',
         text: async (): Promise<string> => '{}',
-        headers: { forEach() {}, get(): null { return null; } },
+        headers: {
+          forEach() {},
+          get(): null {
+            return null;
+          },
+        },
       };
-    }) as unknown) as typeof fetch;
+    }) as unknown as typeof fetch;
     const client = createSite24x7HttpClient({ oauth: fakeOauth(), fetch: spyFetch });
-    await client.request(tenant({ zaaid: 'cust-1' }), { method: 'GET', path: '/api/current_status' });
+    await client.request(tenant({ zaaid: 'cust-1' }), {
+      method: 'GET',
+      path: '/api/current_status',
+    });
     const headers = (captured.init.headers ?? {}) as Record<string, string>;
     expect(headers['Cookie']).toBe('zaaid=cust-1');
   });
 
   it('per-call zaaid overrides ambient zaaid', async () => {
     const captured: { init: RequestInit } = { init: {} };
-    const spyFetch = ((async (_url: string, init: RequestInit) => {
+    const spyFetch = (async (_url: string, init: RequestInit) => {
       captured.init = init;
       return {
         ok: true,
         status: 200,
         statusText: 'OK',
         text: async (): Promise<string> => '{}',
-        headers: { forEach() {}, get(): null { return null; } },
+        headers: {
+          forEach() {},
+          get(): null {
+            return null;
+          },
+        },
       };
-    }) as unknown) as typeof fetch;
+    }) as unknown as typeof fetch;
     const client = createSite24x7HttpClient({ oauth: fakeOauth(), fetch: spyFetch });
-    await client.request(tenant({ zaaid: 'amb' }), { method: 'GET', path: '/api/x', zaaid: 'override' });
+    await client.request(tenant({ zaaid: 'amb' }), {
+      method: 'GET',
+      path: '/api/x',
+      zaaid: 'override',
+    });
     const headers = (captured.init.headers ?? {}) as Record<string, string>;
     expect(headers['Cookie']).toBe('zaaid=override');
   });
@@ -112,7 +137,11 @@ describe('HTTP client', () => {
     };
     const client = createSite24x7HttpClient({ oauth: fakeOauth(), fetch: fakeFetchOk() });
     await expect(
-      client.request(tenant({ accountType: 'msp' }), { method: 'GET', path: op.path, operation: op }),
+      client.request(tenant({ accountType: 'msp' }), {
+        method: 'GET',
+        path: op.path,
+        operation: op,
+      }),
     ).rejects.toBeInstanceOf(MissingZaaidError);
   });
 
@@ -124,7 +153,7 @@ describe('HTTP client', () => {
       clearAll: vi.fn(),
     };
     let attempt = 0;
-    const spyFetch = ((async () => {
+    const spyFetch = (async () => {
       attempt += 1;
       const ok = attempt > 1;
       return {
@@ -132,9 +161,14 @@ describe('HTTP client', () => {
         status: ok ? 200 : 401,
         statusText: ok ? 'OK' : 'Unauthorized',
         text: async (): Promise<string> => (ok ? '{"data":1}' : '{"error":"unauthorized"}'),
-        headers: { forEach() {}, get(): null { return null; } },
+        headers: {
+          forEach() {},
+          get(): null {
+            return null;
+          },
+        },
       };
-    }) as unknown) as typeof fetch;
+    }) as unknown as typeof fetch;
     const client = createSite24x7HttpClient({ oauth, fetch: spyFetch });
     const res = await client.request(tenant(), { method: 'GET', path: '/api/x' });
     expect(res.status).toBe(200);
@@ -155,16 +189,26 @@ describe('HTTP client', () => {
       docUrl: '',
       haystack: '',
     };
-    const spyFetch = ((async () => ({
+    const spyFetch = (async () => ({
       ok: false,
       status: 403,
       statusText: 'Forbidden',
       text: async (): Promise<string> => '{"error":"forbidden","message":"insufficient scope"}',
-      headers: { forEach() {}, get(): null { return null; } },
-    })) as unknown) as typeof fetch;
+      headers: {
+        forEach() {},
+        get(): null {
+          return null;
+        },
+      },
+    })) as unknown as typeof fetch;
     const client = createSite24x7HttpClient({ oauth: fakeOauth(), fetch: spyFetch });
     await expect(
-      client.request(tenant(), { method: 'PUT', path: op.path, operation: op, pathParams: { user_id: '1' } }),
+      client.request(tenant(), {
+        method: 'PUT',
+        path: op.path,
+        operation: op,
+        pathParams: { user_id: '1' },
+      }),
     ).rejects.toMatchObject({
       message: expect.stringContaining('Site24x7.Admin.Update'),
     });
@@ -172,16 +216,21 @@ describe('HTTP client', () => {
 
   it('substitutes path params and serialises queries', async () => {
     const captured: { url: string } = { url: '' };
-    const spyFetch = ((async (url: string) => {
+    const spyFetch = (async (url: string) => {
       captured.url = url;
       return {
         ok: true,
         status: 200,
         statusText: 'OK',
         text: async (): Promise<string> => '{}',
-        headers: { forEach() {}, get(): null { return null; } },
+        headers: {
+          forEach() {},
+          get(): null {
+            return null;
+          },
+        },
       };
-    }) as unknown) as typeof fetch;
+    }) as unknown as typeof fetch;
     const client = createSite24x7HttpClient({ oauth: fakeOauth(), fetch: spyFetch });
     await client.request(tenant(), {
       method: 'GET',

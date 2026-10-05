@@ -12,11 +12,7 @@
 
 import type { AppConfig } from '../config.js';
 import { isSite24x7Zone } from '../types/zones.js';
-import {
-  MissingCredentialsError,
-  type AccountType,
-  type TenantContext,
-} from '../types/tenant.js';
+import { MissingCredentialsError, type AccountType, type TenantContext } from '../types/tenant.js';
 
 function validateRequired(partial: Partial<TenantContext>): TenantContext {
   const missing: string[] = [];
@@ -57,7 +53,10 @@ const HEADER_NAMES = {
   accountType: 'x-site24x7-account-type',
 } as const;
 
-function header(headers: Record<string, string | string[] | undefined>, name: string): string | undefined {
+function header(
+  headers: Record<string, string | string[] | undefined>,
+  name: string,
+): string | undefined {
   const value = headers[name] ?? headers[name.toLowerCase()];
   if (value === undefined) return undefined;
   if (Array.isArray(value)) return value[0];

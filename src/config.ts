@@ -10,10 +10,7 @@
 import { homedir } from 'node:os';
 import { resolve } from 'node:path';
 import { z } from 'zod';
-import {
-  SITE24X7_ZONES,
-  type Site24x7Zone,
-} from './types/zones.js';
+import { SITE24X7_ZONES, type Site24x7Zone } from './types/zones.js';
 
 const TransportEnum = z.enum(['stdio', 'http']);
 
@@ -24,9 +21,7 @@ const ZoneEnum = z.enum(SITE24X7_ZONES);
 const RawEnvSchema = z.object({
   MCP_TRANSPORT: TransportEnum.default('stdio'),
   MCP_HTTP_PORT: z.coerce.number().int().positive().max(65_535).default(8000),
-  MCP_HTTP_ALLOWED_ORIGINS: z
-    .string()
-    .default('http://localhost,http://127.0.0.1'),
+  MCP_HTTP_ALLOWED_ORIGINS: z.string().default('http://localhost,http://127.0.0.1'),
 
   SITE24X7_CLIENT_ID: z.string().optional(),
   SITE24X7_CLIENT_SECRET: z.string().optional(),

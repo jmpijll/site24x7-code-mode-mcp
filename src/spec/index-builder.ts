@@ -55,7 +55,11 @@ function buildHaystack(op: RawOperation): string {
 /** Tiny search ranker — splits the query on whitespace, returns operations
  * whose `haystack` contains every term, ordered by an aggregated score
  * that favours operationId / summary matches over description matches. */
-export function searchOperations(spec: ProcessedSpec, query: string, limit = 25): IndexedOperation[] {
+export function searchOperations(
+  spec: ProcessedSpec,
+  query: string,
+  limit = 25,
+): IndexedOperation[] {
   const terms = query
     .toLowerCase()
     .split(/\s+/)
